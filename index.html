@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div>
+    <span>Количество стратегий для игрока 1:</span><input type="number" id="player1">
+    <span>Количество стратегий для игрока 2:</span> <input type="number" id="player2">
+    <button onclick="init()">Создать матрицу платежей</button>
+    <button onclick="show()">Показать функции реакции игроков</button>
+</div>
+<div id="main">
+
+</div>
+<div id="second" style="margin-top: 50px;">
+
+</div>
+<div id="third" style="clear:both; padding-top: 50px; display:none;">
+
+</div>
+</body>
+<script>
+    var p1;
+    var p2;
+    var arr1 = [];
+    var arr2 = [];
+    var max1 = [0,0,0,0,0,0,0,0,0,0];
+    var max2 = [0,0,0,0,0,0,0,0,0,0];
+    var ind1 = [];
+    var ind2 = [];
+
+    function show() {
+        document.getElementById("third").style.display = "block";
+    }
+
+    function init() {
+        try{
+            document.getElementById("main").innerHTML = "";
+            document.getElementById("second").innerHTML = "";
+            document.getElementById("third").innerHTML = "";
+        }
+        catch(exception){};
+
+        p1 = parseInt(document.getElementById("player1").value);
+        p2 = parseInt(document.getElementById("player2").value);
+        if (p1 > 10 || p1<1) p1 = 10;
+        if (p2 > 10 || p2<1) p2 = 10;
+        tableCreate1();
+        for(var i = 1; i <= p2; i++)
+        {
+            for(var j = i; j <= p1*p2; j += p2) {
+                if (arr1[j] > max1[i-1]) max1[i-1] = arr1[j];
+                if (arr2[j] > max2[i-1]) max2[i-1] = arr2[j];
+            }
+        }
+        console.log(max1);
+        console.log(max2);
+
+        for(var i = 1; i <= p2; i++)
+        {
+            for(var j = i; j <= p1*p2; j += p2) {
+                if (arr1[j] == max1[i-1]) ind1.push("ff" + j);
+                if (arr2[j] == max2[i-1]) ind2.push("ss" + j);
+            }
+        }
+
+        console.log(ind1);
+        console.log(ind2);
+
+        tableCreate2(1);
+        tableCreate2(2);
+        tableCreate3(1);
+        tableCreate3(2);
+
+        for(var i = 0; i < ind1.length; i++) {
+            myfunc2(ind1[i]);
+        }
+        for(var i = 0; i < ind2.length; i++) {
+            myfunc2(ind2[i]);
+        }
+        max1 = [0,0,0,0,0,0,0,0,0,0];
+        max2 = [0,0,0,0,0,0,0,0,0,0];
+        ind1 = [];
+        ind2 = [];
+    }
+
+    function tableCreate1() {
+        var tbl = document.createElement('table');
+        tbl.style.border = '1px solid black';
+        var c = 0;
+        for (var i = 0; i < p1; i++) {
+            var tr = tbl.insertRow();
+            for (var j = 0; j < p2; j++) {
+                c++;
+                arr1[c] = Math.floor(Math.random() * 10);
+                arr2[c] = Math.floor(Math.random() * 10);
+                var td = tr.insertCell();
+                td.style.border = '1px solid black';
+                td.style.width = "40px";
+                td.style.height = "20px";
+                td.style.paddingLeft = "8px";
+                var t = document.createTextNode(arr1[c]+"; " + arr2[c]);
+                td.appendChild(t);
+                td.style.fontSize = "20px";
+                td.style.fontWeight = "bold";
+            }
+        }
+        document.getElementById("main").appendChild(tbl);
+    }
+
+    function tableCreate2(num) {
+        var tbl = document.createElement('table');
+        tbl.style.border = '1px solid black';
+        tbl.style.float = "left";
+        tbl.style.marginRight = "100px";
+        var c = 0;
+        for (var i = 0; i < p1; i++) {
+            var tr = tbl.insertRow();
+            for (var j = 0; j < p2; j++) {
+                c++;
+                var td = tr.insertCell();
+                td.style.border = '1px solid black';
+                td.style.width = "25px";
+                td.style.height = "20px";
+                td.style.paddingLeft = "13px";
+                if(num == 1){
+                    var t = document.createTextNode(arr1[c].toString());
+                    td.setAttribute("id","f" + c);}
+                else{
+                    var t = document.createTextNode(arr2[c].toString());
+                    td.setAttribute("id","s" + c);}
+                td.appendChild(t);
+                td.style.fontSize = "20px";
+                td.style.fontWeight = "bold";
+                //function() {document.getElementById(this.id.toString()).style.color = "green";}
+                td.setAttribute('onclick', "myfunc1(this.id)");
+            }
+        }
+        document.getElementById("second").appendChild(tbl);
+    }
+
+    function tableCreate3(num) {
+        var tbl = document.createElement('table');
+        tbl.style.border = '1px solid black';
+        tbl.style.float = "left";
+        tbl.style.marginRight = "100px";
+        var c = 0;
+        var index = 0;
+        for (var i = 0; i < p1; i++) {
+            var tr = tbl.insertRow();
+
+            for (var j = 0; j < p2; j++) {
+                c++;
+                var td = tr.insertCell();
+                td.style.border = '1px solid black';
+                td.style.width = "25px";
+                td.style.height = "20px";
+                td.style.paddingLeft = "13px";
+                if(num == 1){
+                    var t = document.createTextNode(arr1[c].toString());
+                    td.setAttribute("id","ff" + c);}
+                else{
+                    var t = document.createTextNode(arr2[c].toString());
+                    td.setAttribute("id","ss" + c);}
+                td.appendChild(t);
+                td.style.fontSize = "20px";
+                td.style.fontWeight = "bold";
+            }
+
+        }
+        document.getElementById("third").appendChild(tbl);
+    }
+
+    function myfunc1(id) {
+        if (document.getElementById(id.toString()).style.backgroundColor == "")
+            document.getElementById(id.toString()).style.backgroundColor = "green";
+        else
+            document.getElementById(id.toString()).style.backgroundColor = "";
+    }
+
+    function myfunc2(id) {
+            document.getElementById(id.toString()).style.backgroundColor = "green";
+
+    }
+</script>
+</html>
