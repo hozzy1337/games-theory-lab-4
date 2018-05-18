@@ -9,14 +9,14 @@
     <span>Количество стратегий для игрока 2:</span> <input type="number" id="player2">
     <button onclick="init()">Создать матрицу платежей</button>
     <button onclick="show()">Показать функции реакции игроков</button>
+	<button onclick="checkMatrix()">Правильно ли ручное решение</button>
 </div>
-<div id="main">
+<div id="main" align="center">
+</div>
+<div id="second" style="margin-top: 50px; margin-left: 250px;">
 
 </div>
-<div id="second" style="margin-top: 50px;">
-
-</div>
-<div id="third" style="clear:both; padding-top: 50px; display:none;">
+<div id="third" style="clear:both; padding-top: 50px; display:none;  margin-left: 250px;">
 
 </div>
 </body>
@@ -39,7 +39,7 @@
             document.getElementById("main").innerHTML = "";
             document.getElementById("second").innerHTML = "";
             document.getElementById("third").innerHTML = "";
-            document.getElementById("third").style.display = "none";
+			document.getElementById("third").style.display = "none";
         }
         catch(exception){};
 
@@ -87,6 +87,10 @@
     }
 
     function tableCreate1() {
+        var cap = document.createElement('h2');
+        var txt = document.createTextNode('Матрица платежей');
+        cap.appendChild(txt);
+
         var tbl = document.createElement('table');
         tbl.style.border = '1px solid black';
         var c = 0;
@@ -107,10 +111,19 @@
                 td.style.fontWeight = "bold";
             }
         }
+        document.getElementById("main").appendChild(cap);
         document.getElementById("main").appendChild(tbl);
     }
 
     function tableCreate2(num) {
+        var cap = document.createElement('h3');
+        if(num == 1)
+            var txt = document.createTextNode('Платежи игрока 1');
+        else
+            var txt = document.createTextNode('Платежи игрока 2');
+        cap.appendChild(txt);
+        if (num == 2){ cap.style.marginTop = "-40px";  cap.style.marginLeft = "350px";}
+
         var tbl = document.createElement('table');
         tbl.style.border = '1px solid black';
         tbl.style.float = "left";
@@ -138,10 +151,19 @@
                 td.setAttribute('onclick', "myfunc1(this.id)");
             }
         }
+        document.getElementById("second").appendChild(cap);
         document.getElementById("second").appendChild(tbl);
     }
 
     function tableCreate3(num) {
+        var cap = document.createElement('h3');
+        if(num == 1)
+            var txt = document.createTextNode('Функция реакции игрока 1');
+        else
+            var txt = document.createTextNode('Функция реакции игрока 2');
+        cap.appendChild(txt);
+        if (num == 2){ cap.style.marginTop = "-40px";  cap.style.marginLeft = "350px";}
+
         var tbl = document.createElement('table');
         tbl.style.border = '1px solid black';
         tbl.style.float = "left";
@@ -170,6 +192,7 @@
             }
 
         }
+        document.getElementById("third").appendChild(cap);
         document.getElementById("third").appendChild(tbl);
     }
 
@@ -183,6 +206,21 @@
     function myfunc2(id) {
             document.getElementById(id.toString()).style.backgroundColor = "green";
 
+    }
+	
+	function checkMatrix() {
+        var flag = true;
+        for(i = 1; i <= p1*p2; i++)
+        {
+            var ind1 = "f" + i;
+            var ind2 = "s" + i;
+            var ind3 = "ff" + i;
+            var ind4 = "ss" + i;
+            if(!(document.getElementById(ind1).style.backgroundColor == document.getElementById(ind3).style.backgroundColor
+                && document.getElementById(ind2).style.backgroundColor == document.getElementById(ind4).style.backgroundColor ))
+                flag = false;
+        }
+        flag ? alert("правильно") : alert("неправильно");
     }
 </script>
 </html>
